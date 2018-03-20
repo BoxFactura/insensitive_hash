@@ -215,7 +215,11 @@ private
   end
 
   def encode key
-    @encoder.call key
+    if @encoder.respond_to? :call
+      @encoder.call key
+    else
+      DEFAULT_ENCODER.call key
+    end
   end
 
   def detect_clash hash
@@ -224,4 +228,3 @@ private
     } if @safe
   end
 end
-
