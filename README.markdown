@@ -115,35 +115,6 @@ db['Development']['ADAPTER']
 db[:production][:adapter]
 ```
 
-Customizing insensitivity
--------------------------
-
-You can provide a `#call`-able object (duck-typing) as the key encoder which determines the level of insensitivity.
-
-### Default encoder
-
-The default encoder is as follows.
-
-```ruby
-InsensitiveHash::DEFAULT_ENCODER =
-  proc { |key|
-    case key
-    when String, Symbol
-      key.to_s.downcase.gsub(' ', '_')
-    else
-      key
-    end
-  }
-```
-
-### Encoder examples
-
-```ruby
-ih1 = {}.insensitive(:encoder => proc { |key| key.to_s })
-ih2 = {}.insensitive(:encoder => proc { |key| key.to_s.downcase })
-ih3 = {}.insensitive(:encoder => proc { |key| key.to_s.downcase.gsub(/\s+/, '_') })
-```
-
 Enabling key-clash detection (Safe mode)
 ----------------------------------------
 ```ruby
@@ -172,4 +143,3 @@ h['Hello World']  # 2
 ## Copyright
 
 Copyright (c) 2013 Junegunn Choi. See LICENSE.txt for further details.
-

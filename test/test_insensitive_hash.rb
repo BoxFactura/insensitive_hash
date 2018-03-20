@@ -5,6 +5,7 @@ Bundler.setup(:default, :development)
 require 'test/unit'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'insensitive_hash'
+require "yaml"
 
 class TestInsensitiveHash < Test::Unit::TestCase
   def eight?
@@ -554,72 +555,17 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal :value, a[:key]
   end
 
-  def test_encoder
-    # With custom encoder
-    a = {}.insensitive(:encoder => prc = proc { |key| key.to_s.downcase })
-    a['1'] = 'one'
-    assert_equal 'one', a[1]
-    assert_equal prc, a.encoder
+  def test_yaml_serialization
+    hash = {
+      'hello' => 'Hola'
+    }.insensitive
 
-    a['hello world'] = true
-    assert_equal true, a['HELLO WORLD']
-    assert_equal nil,  a[:HELLO_WORLD]
+    yaml = YAML.dump hash
+    assert yaml.is_a? String
 
-    # Update encoder
-    a.encoder = proc { |key| key.to_s.gsub(' ', '_').downcase }
-    assert_equal true, a[:HELLO_WORLD]
-
-    # Update again
-    callable = Class.new {
-      def call key
-        key.to_s
-      end
-    }.new
-    a.encoder = callable
-    assert_equal true, a[:"hello world"]
-    assert_equal nil, a['HELLO WORLD']
-    assert_equal nil, a[:hello_world]
-    assert_equal nil, a[:HELLO_WORLD]
-  end
-
-  def test_encoder_invalid_type
-    assert_raise(ArgumentError) {
-      {}.insensitive(:encoder => 1)
-    }
-    assert_raise(ArgumentError) {
-      h = InsensitiveHash.new
-      h.encoder = 1
-    }
-  end
-
-  def test_encoder_replace
-    a = {}.insensitive(:encoder => proc { |key| key })
-    b = {}.insensitive(:encoder => proc { |key| key.to_s })
-    a[:key] = b[:key] = 1
-    assert_equal 1, a[:key]
-    assert_equal 1, b[:key]
-    assert_nil a['key']
-    assert_equal 1, b['key']
-
-    a.replace b
-    assert_equal 1, a['key']
-    a[:key2] = 2
-    assert_equal 2, a['key2']
-  end
-
-  def test_encoder_nested
-    [ { :a => { :b => { :c => :d } } },
-      { :a => { :b => { :c => :d }.insensitive } },
-    ].each do |h|
-      ih = h.insensitive(:encoder => proc { |key| 1 })
-      assert ih.has_key?(:anything)
-      assert_equal :d, ih[:a][:b][:c]
-      assert_equal :b, ih[:any].keys.first
-      assert_equal :d, ih[:any][:any][:c]
-      assert_equal :d, ih[:any][:any][:C]
-      assert_instance_of InsensitiveHash, ih[:any][:any]
-      assert_equal :d, ih[:any][:any][:any]
-    end
+    new_hash = YAML.load yaml
+    assert new_hash.is_a? InsensitiveHash
+    assert new_hash.is_a? Hash
   end
 
   class MyInsensitiveHash < InsensitiveHash

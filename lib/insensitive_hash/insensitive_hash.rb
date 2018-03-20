@@ -1,22 +1,9 @@
 # Insensitive Hash.
 # @author Junegunn Choi <junegunn.c@gmail.com>
-# @!attribute [r] encoder
-#   @return [#call] Key encoder. Determines the level of insensitivity.
 class InsensitiveHash < Hash
-  attr_reader :encoder
-
   # Thrown when safe mode is on and another Hash with conflicting keys cannot be merged safely
   class KeyClashError < Exception
   end
-
-  DEFAULT_ENCODER = proc { |key|
-    case key
-    when String, Symbol
-      key.to_s.downcase.gsub(' ', '_')
-    else
-      key
-    end
-  }
 
   def initialize default = nil, &block
     if block_given?
@@ -26,9 +13,8 @@ class InsensitiveHash < Hash
       super
     end
 
-    @key_map = {}
+    @key_map = Hash.new
     @safe    = false
-    @encoder = DEFAULT_ENCODER
   end
 
   # Sets whether to detect key clashes
@@ -42,21 +28,6 @@ class InsensitiveHash < Hash
   # @return [Boolean] Key-clash detection enabled?
   def safe?
     @safe
-  end
-
-  # @param [#call] prc Key encoder. Determines the level of insensitivity.
-  # @return [#call]
-  def encoder= prc
-    raise ArgumentError, "Encoder must respond to :call" unless prc.respond_to?(:call)
-
-    kvs = to_a
-    clear
-    @encoder = prc
-    kvs.each do |pair|
-      store(*pair)
-    end
-
-    prc
   end
 
   # Returns a normal, sensitive Hash
@@ -138,7 +109,6 @@ class InsensitiveHash < Hash
     super other
 
     self.safe = other.respond_to?(:safe?) ? other.safe? : safe?
-    self.encoder = other.respond_to?(:encoder) ? other.encoder : DEFAULT_ENCODER
 
     @key_map.clear
     self.each do |k, v|
@@ -190,12 +160,10 @@ private
     when InsensitiveHash
       value.tap { |ih|
         ih.safe = safe?
-        ih.encoder = encoder
       }
     when Hash
       self.class.new.tap { |ih|
         ih.safe = safe?
-        ih.encoder = encoder
         ih.merge_recursive!(value)
       }
     when Array
@@ -206,6 +174,7 @@ private
   end
 
   def lookup_key key, delete = false
+    @key_map = Hash.new if @key_map.nil?
     ekey = encode key
     if @key_map.has_key?(ekey)
       delete ? @key_map.delete(ekey) : @key_map[ekey]
@@ -215,10 +184,11 @@ private
   end
 
   def encode key
-    if @encoder.respond_to? :call
-      @encoder.call key
+    case key
+    when String, Symbol
+      key.to_s.downcase.gsub(' ', '_')
     else
-      DEFAULT_ENCODER.call key
+      key
     end
   end
 
