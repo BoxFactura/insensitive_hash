@@ -50,7 +50,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal 5, ih['B'][:c]
     assert_equal nil, ih['B']['C']
 
-    ih['c'] = [ { 'x' => 1 }, { :y => 2 } ]
+    ih['c'] = [{ 'x' => 1 }, { :y => 2 }]
     assert       ih.keys.include?('c')
     assert_equal 3, ih.keys.length
 
@@ -62,7 +62,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal 2, ih[:c].last['Y']
 
     # Deeeeeper nesting
-    ih['c'] = [ [ [ { 'x' => 1 }, { :y => 2 } ] ] ]
+    ih['c'] = [[[{ 'x' => 1 }, { :y => 2 }]]]
     assert_equal nil, ih[:c].first.first.last[:Y]
     ih = ih.insensitive
     assert_equal 2, ih[:c].first.first.last[:Y]
@@ -78,13 +78,11 @@ class TestInsensitiveHash < Test::Unit::TestCase
     hash = {
       'a' => 1,
       'B' => 2,
-      :c  => { :D => [ { 'e' => 3 } ] }
+      :c  => { :D => [{ 'e' => 3 }] }
     }
 
-    pend("TODO") do
-      assert_raise(NoMethodError) {
-        hash.insensitive
-      }
+    pend('TODO') do
+      assert_raise(NoMethodError) { hash.insensitive }
     end
 
     [hash.insensitive, InsensitiveHash[hash]].each do |ih|
@@ -133,7 +131,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     end
 
     # FIXME: test insensitive call with encoder
-    h = InsensitiveHash[{'Key with spaces' => 1}]
+    h = InsensitiveHash[{ 'Key with spaces' => 1 }]
     h2 = h.insensitive
 
     assert_equal 1, h['key with spaces']
@@ -149,21 +147,17 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert ih[:a_key_with_spaces]
 
     # FIXME: from README
-    ih = InsensitiveHash[ h ]
+    ih = InsensitiveHash[h]
     assert ih[:a_key_with_spaces]
 
     # :safe
     ih = {}.insensitive
-    assert_raise(ArgumentError) {
-      ihs = {'a' => 1}.insensitive(:safe => 1)
-    }
+    assert_raise(ArgumentError) { ihs = {'a' => 1}.insensitive(:safe => 1) }
     ihs = {'a' => 1}.insensitive(:safe => true)
     assert !ih.safe?
     assert ihs.safe?
 
-    assert_raise(InsensitiveHash::KeyClashError) {
-      ihs.merge(:a => 2, 'A' => 3)
-    }
+    assert_raise(InsensitiveHash::KeyClashError) { ihs.merge(:a => 2, 'A' => 3) }
   end
 
   def test_delete
@@ -178,7 +172,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_merge
-    [:merge, :update].each do |method|
+    %i[merge update].each do |method|
       ih = InsensitiveHash[:a => 1, 'hello world' => 2]
       nh = { :d => :e }
       ih2 = ih.send(method, :b => 2, :c => nh)
@@ -214,7 +208,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_merge!
-    [:merge!, :update!].each do |method|
+    %i[merge! update!].each do |method|
       ih = InsensitiveHash[:a => 1]
       ih2 = ih.send(method, :b => 2)
 
@@ -228,7 +222,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_merge_recursive!
-    [:merge_recursive!, :update_recursive!].each do |method|
+    %i[merge_recursive! update_recursive!].each do |method|
       ih = InsensitiveHash.new
       ih[:a] = 1
       ih[:b] = 2
@@ -258,7 +252,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal 1, ih.length
 
     ih = InsensitiveHash.new
-    ih.merge!(:hello_world => 1, 'hello world' =>2)
+    ih.merge!(:hello_world => 1, 'hello world' => 2)
     unless eight?
       assert_equal 2, ih.values.first
       assert_equal 2, ih[:Hello_World]
@@ -273,7 +267,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     sih = InsensitiveHash.new
     sih.safe = true
 
-    [:merge, :merge!, :update, :update!].each do |method|
+    %i[merge merge! update update!].each do |method|
       # No problem
       [ih, ih2].each do |h|
         h.send(method, { :a => 1, :A => 1, 'A' => 1})
@@ -303,11 +297,11 @@ class TestInsensitiveHash < Test::Unit::TestCase
     pend "1.8" if eight?
 
     h = InsensitiveHash[{
-      "colors"  => ["red", "blue", "green"],
-      :Letters => ["a", "b", "c" ]
+      'colors'  => ['red', 'blue', 'green'],
+      :Letters => ['a', 'b', 'c' ]
     }]
-    assert_equal [:Letters, ["a", "b", "c"]], h.assoc("letters")
-    assert_equal ["colors", ["red", "blue", "green"]], h.assoc(:COLORS)
+    assert_equal [:Letters, ['a', 'b', 'c']], h.assoc('letters')
+    assert_equal ['colors', ['red', 'blue', 'green']], h.assoc(:COLORS)
   end
 
   def test_clear_empty?
@@ -318,7 +312,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_to_hash
-    h = InsensitiveHash[:a, 1, :b, {:c => 2}]
+    h = InsensitiveHash[:a, 1, :b, { :c => 2 }]
     assert_equal 1, h[:A]
     assert_equal 2, h['B']['C']
 
@@ -327,7 +321,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal nil, h[:A]
     assert_equal 1, h[:a]
     assert_equal 2, h[:b][:c]
-    pend("TBD: Recursive conversion") do
+    pend('TBD: Recursive conversion') do
       assert_equal nil, h[:b]['C']
     end
   end
@@ -361,17 +355,17 @@ class TestInsensitiveHash < Test::Unit::TestCase
 
   def test_initializer
     # Hash
-    h = InsensitiveHash[ { :a => 1 } ]
+    h = InsensitiveHash[{ :a => 1 }]
     assert_equal 1, h['A']
     assert_equal [:a], h.keys
     assert_equal [1], h.values
 
     # Pairs
-    h = InsensitiveHash[ 'a', 2, 3, 4 ]
+    h = InsensitiveHash['a', 2, 3, 4]
     assert_equal 2, h[:a]
 
     # Wrong number of arguments
-    assert_raise(ArgumentError) { h = InsensitiveHash[ 'a', 2, 3 ] }
+    assert_raise(ArgumentError) { h = InsensitiveHash['a', 2, 3] }
   end
 
   def test_default
@@ -414,14 +408,14 @@ class TestInsensitiveHash < Test::Unit::TestCase
 
   def test_delete_if
     # FIXME: Test passes, but key_map not updated
-    h = InsensitiveHash[ :a => 100, :tmp_a => 200, :c => 300 ]
+    h = InsensitiveHash[:a => 100, :tmp_a => 200, :c => 300]
     h.delete_if.each { |k, v| k == :tmp_a }
     assert_keys [:a, :c], h.keys
   end
 
   def test_has_key_after_delete
     set = [:a, :A, 'a', 'A', :b, :B, 'b', 'B']
-    h = InsensitiveHash[ :a => 1, :b => 2 ]
+    h = InsensitiveHash[:a => 1, :b => 2]
 
     set.each { |s| assert h.has_key?(s) }
     h.delete_if { |k, v| true }
@@ -436,7 +430,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
     assert_equal 1, h[:not_there]
     assert_equal 2, h[nil]
 
-    h = InsensitiveHash[ nil => 1 ]
+    h = InsensitiveHash[nil => 1]
     assert_equal :notfound, h.delete('a') { :notfound }
     assert_equal 1, h.delete(nil) { :notfound }
   end
@@ -474,9 +468,9 @@ class TestInsensitiveHash < Test::Unit::TestCase
   def test_rassoc
     pend "1.8" if eight?
 
-    a = InsensitiveHash[{1=> "one", 2 => "two", 3 => "three", "ii" => "two"}]
-    assert_equal [2, "two"], a.rassoc("two")
-    assert_nil a.rassoc("four")
+    a = InsensitiveHash[{1=> 'one', 2 => 'two', 3 => 'three', 'ii' => 'two'}]
+    assert_equal [2, 'two'], a.rassoc('two')
+    assert_nil a.rassoc('four')
   end
 
   def test_shift
@@ -571,8 +565,8 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_subclassing
-    mih = MyInsensitiveHash[{ "a" => { "b" => 3 } }]
+    mih = MyInsensitiveHash[{ 'a' => { 'b' => 3 } }]
     assert_instance_of MyInsensitiveHash, mih
-    assert_instance_of MyInsensitiveHash, mih["a"]
+    assert_instance_of MyInsensitiveHash, mih['a']
   end
 end
