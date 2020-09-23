@@ -1,15 +1,14 @@
-insensitive_hash
-================
+# insensitive_hash
+
 Hash with case-insensitive, Symbol/String-indifferent key access.
 
-Installation
-------------
+## Installation
+
 ```
 gem install insensitive_hash
 ```
 
-Instantiation
--------------
+## Instantiation
 
 ### Hash#insensitive
 
@@ -49,8 +48,7 @@ h = ih.sensitive
 h = ih.to_hash
 ```
 
-Basic usage
------------
+## Basic usage
 
 ```ruby
 ih = {:abc => 1, 'DEF' => 2}.insensitive
@@ -73,8 +71,7 @@ ih.delete :Abc     # 10
 ih.keys            # ['DEF']
 ```
 
-Inherited insensitivity
------------------------
+## Inherited insensitivity
 
 When an InsensitiveHash is built from another Hash,
 descendant Hash values are recursively converted to be insensitive.
@@ -115,8 +112,8 @@ db['Development']['ADAPTER']
 db[:production][:adapter]
 ```
 
-Enabling key-clash detection (Safe mode)
-----------------------------------------
+## Enabling key-clash detection (Safe mode)
+
 ```ruby
 ih = InsensitiveHash.new
 ih.safe = true
@@ -132,14 +129,17 @@ h['Hello World']  # 2
 
 ## Contributing to insensitive_hash
 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
-* Fork the project
-* Start a feature/bugfix branch
-* Commit and push until you are happy with your contribution
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+- Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+- Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+- Fork the project
+- Start a feature/bugfix branch
+- Commit and push until you are happy with your contribution
+- Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+- Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## Copyright
 
-Copyright (c) 2013 Junegunn Choi. See LICENSE.txt for further details.
+Copyright (c) 2013 Junegunn Choi.
+Copyright (c) 2018-2022 Arandi López
+
+See LICENSE.txt for further details.

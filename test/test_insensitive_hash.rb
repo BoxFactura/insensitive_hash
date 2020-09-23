@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 $VERBOSE = true
 require 'rubygems'
 require 'bundler'
@@ -5,7 +7,7 @@ Bundler.setup(:default, :development)
 require 'test/unit'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'insensitive_hash'
-require "yaml"
+require 'yaml'
 
 class TestInsensitiveHash < Test::Unit::TestCase
   def eight?
@@ -14,8 +16,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
 
   def assert_keys set1, set2
     if eight?
-      assert_equal set1.sort { |a, b| a.to_s <=> b.to_s },
-        set2.sort { |a, b| a.to_s <=> b.to_s }
+      assert_equal(set1.sort { |a, b| a.to_s <=> b.to_s }, set2.sort { |a, b| a.to_s <=> b.to_s })
     else
       assert_equal set1, set2
     end
@@ -556,9 +557,7 @@ class TestInsensitiveHash < Test::Unit::TestCase
   end
 
   def test_yaml_serialization
-    hash = {
-      'hello' => 'Hola'
-    }.insensitive
+    hash = { 'hello' => 'Hola' }.insensitive
 
     yaml = YAML.dump hash
     assert yaml.is_a? String
