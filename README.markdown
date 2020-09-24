@@ -1,6 +1,10 @@
 # insensitive_hash
 
+[![Build Status](https://travis-ci.org/BoxFactura/insensitive_hash.svg?branch=master)](https://travis-ci.org/BoxFactura/insensitive_hash)
+
 Hash with case-insensitive, Symbol/String-indifferent key access.
+
+> This project is a fork from [https://github.com/junegunn/insensitive_hash](https://github.com/junegunn/insensitive_hash) and it was made to continue its maintenance.
 
 ## Installation
 
