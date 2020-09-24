@@ -143,7 +143,7 @@ h['Hello World']  # 2
 
 ## Copyright
 
-Copyright (c) 2013 Junegunn Choi.
-Copyright (c) 2018-2022 Arandi López
+- Copyright (c) 2013 Junegunn Choi.
+- Copyright (c) 2018-2020 Box Factura
 
 See LICENSE.txt for further details.
