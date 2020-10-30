@@ -1,4 +1,4 @@
-# insensitive_hash
+# insensitive_hash_bxf
 
 [![Build Status](https://travis-ci.org/BoxFactura/insensitive_hash.svg?branch=master)](https://travis-ci.org/BoxFactura/insensitive_hash)
 
@@ -9,7 +9,7 @@ Hash with case-insensitive, Symbol/String-indifferent key access.
 ## Installation
 
 ```
-gem install insensitive_hash
+gem install insensitive_hash_bxf
 ```
 
 ## Instantiation
