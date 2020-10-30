@@ -4,7 +4,7 @@ $:.push File.expand_path('../lib', __FILE__)
 require 'insensitive_hash/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'insensitive_hash'
+  s.name        = 'insensitive_hash_bxf'
   s.version     = InsensitiveHash::VERSION
   s.authors     = ['Junegunn Choi', 'Arandi Lopez']
   s.email       = ['junegunn.c@gmail.com', 'arandilopez.93@gmail.com']
@@ -12,8 +12,6 @@ Gem::Specification.new do |s|
   s.summary     = 'Case-insensitive Ruby Hash'
 
   s.description = 'Hash with case-insensitive, Symbol/String-indifferent key access'
-
-  # s.rubyforge_project = "insensitive_hash"
 
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
